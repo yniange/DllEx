@@ -167,17 +167,26 @@ void CMFCDlgDlg::OnBnClickedBtnAdd()
 	//MessageBox(str);
 
 	HMODULE hMoudule = LoadLibrary(_T("Dll2.dll"));
-	typedef int (*FunAdd)(int a, int b);
-	FunAdd pAdd = (FunAdd)GetProcAddress(hMoudule, "add");
-	if (!pAdd)
+	if (!hMoudule)
 	{
-		MessageBox(_T("获取函数地址失败！"));
+		MessageBox(_T("DLL加载失败！"));
 		return;
 	}
-	CString str;
-	str.Format(_T("7+3=%d"), pAdd(7, 3));
-	MessageBox(str);
-	FreeLibrary(hMoudule);
+	else
+	{
+		typedef int (*FunAdd)(int a, int b);
+		FunAdd pAdd = (FunAdd)GetProcAddress(hMoudule, "add");
+		if (!pAdd)
+		{
+			MessageBox(_T("获取函数地址失败！"));
+			return;
+		}
+		CString str;
+		str.Format(_T("7+3=%d"), pAdd(7, 3));
+		MessageBox(str);
+
+		FreeLibrary(hMoudule);
+	}
 }
 
 
